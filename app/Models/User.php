@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'nickname',
         'avatar',
+        'is_admin',
     ];
 
     /**
@@ -43,7 +44,12 @@ class User extends Authenticatable
     {
         return [
             'twitch_id' => 'string',
+            'is_admin' => 'boolean',
         ];
+        public function isAdmin()
+        {
+            return $this->is_admin === true;
+        }
     }
     public function badges()
     {
