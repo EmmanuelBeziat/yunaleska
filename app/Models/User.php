@@ -46,11 +46,13 @@ class User extends Authenticatable
             'twitch_id' => 'string',
             'is_admin' => 'boolean',
         ];
-        public function isAdmin()
-        {
-            return $this->is_admin === true;
-        }
     }
+
+    public function isAdmin()
+    {
+        return $this->is_admin === true;
+    }
+
     public function badges()
     {
         return $this->belongsToMany(Badge::class, 'user_badges')

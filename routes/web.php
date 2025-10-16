@@ -20,3 +20,8 @@ use App\Http\Controllers\Auth\TwitchController;
 
 Route::get('/auth/twitch', [TwitchController::class, 'redirectToTwitch'])->name('twitch.login');
 Route::get('/auth/twitch/callback', [TwitchController::class, 'handleTwitchCallback'])->name('twitch.callback');
+
+// Admin routes
+Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
+    Route::resource('admin/badges', \App\Http\Controllers\Admin\BadgesController::class);
+});
