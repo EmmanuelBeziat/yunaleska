@@ -18,9 +18,10 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'twitch_id',
         'name',
-        'email',
-        'password',
+        'nickname',
+        'avatar',
     ];
 
     /**
@@ -41,8 +42,18 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'twitch_id' => 'string',
         ];
+    }
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class, 'user_badges')
+            ->withPivot('unlocked_at')
+            ->withTimestamps();
+    }
+
+    public function actionLogs()
+    {
+        return $this->hasMany(ActionLog::class);
     }
 }

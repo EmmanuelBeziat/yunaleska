@@ -4,27 +4,19 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return Auth::check() ? view('dashboard') : redirect()->route('login');
+})->name('home');
 
-Route::get('/auth/twitch', function () {
-    return Socialite::driver('twitch')->redirect();
-});
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
 
-Route::get('/auth/twitch/callback', function () {
-    $user = Socialite::driver('twitch')->user();
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect()->route('login');
+})->name('logout');
 
-    // Get or create user
-    $authUser = \App\Models\User::updateOrCreate(
-        ['twitch_id' => $user->getId()],
-        [
-            'name' => $user->getName(),
-            'nickname' => $user->getNickname(),
-            'avatar' => $user->getAvatar(),
-        ]
-    );
+use App\Http\Controllers\Auth\TwitchController;
 
-    Auth::login($authuser);
-
-    return redirect('/');
-});
+Route::get('/auth/twitch', [TwitchController::class, 'redirectToTwitch'])->name('twitch.login');
+Route::get('/auth/twitch/callback', [TwitchController::class, 'handleTwitchCallback'])->name('twitch.callback');
